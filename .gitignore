@@ -1,0 +1,10 @@
+/vendor/
+*.test
+*.out
+*.prof
+.idea/
+.vscode/
+*.swp
+
+.DS_Store
+Thumbs.db
