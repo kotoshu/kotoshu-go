@@ -49,11 +49,18 @@ type Languages struct {
 	Cached []string `json:"cached"`
 }
 
+// ServerVersion is the response from /v1/version.
+type ServerVersion struct {
+	Server  string `json:"server"`
+	Kotoshu string `json:"kotoshu"`
+	Ruby    string `json:"ruby"`
+}
+
 // Health is the response from /v1/health.
 type Health struct {
-	Status    string            `json:"status"`
-	Ready     map[string]bool   `json:"ready"`
-	Timestamp string            `json:"timestamp,omitempty"`
+	Status    string          `json:"status"`
+	Ready     map[string]bool `json:"ready"`
+	Timestamp string          `json:"timestamp,omitempty"`
 }
 
 // APIError wraps a server error response.
@@ -124,6 +131,15 @@ func (c *Client) Health(ctx context.Context) (*Health, error) {
 		return nil, err
 	}
 	return &h, nil
+}
+
+// ServerVersion reports the server, engine, and Ruby versions.
+func (c *Client) ServerVersion(ctx context.Context) (*ServerVersion, error) {
+	var v ServerVersion
+	if err := c.get(ctx, "/v1/version", &v); err != nil {
+		return nil, err
+	}
+	return &v, nil
 }
 
 // Languages returns cached languages.

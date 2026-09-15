@@ -3,6 +3,7 @@ package kotoshu
 import (
 	"context"
 	"os"
+	"strings"
 	"testing"
 	"time"
 )
@@ -143,5 +144,19 @@ func TestLanguages(t *testing.T) {
 	}
 	if !found {
 		t.Errorf("expected 'en' in languages; got %v", langs)
+	}
+}
+
+func TestServerVersion(t *testing.T) {
+	url := baseURLOrSkip(t)
+	c, _ := New(url)
+	ctx, cancel := context.WithTimeout(context.Background(), 5*time.Second)
+	defer cancel()
+	v, err := c.ServerVersion(ctx)
+	if err != nil {
+		t.Fatal(err)
+	}
+	if !strings.HasPrefix(v.Kotoshu, "1.") {
+		t.Errorf("expected kotoshu 1.x, got %s", v.Kotoshu)
 	}
 }
